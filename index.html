@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RiskGuard | AI 투자 위험 경고 서비스</title>
+  <meta name="description" content="투자하기 전에 피해야 할 고위험 자산을 분석하여 개인 투자자의 대형 손실을 예방하는 인공지능 투자 경고 서비스 MVP입니다.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <a href="#" class="logo-group" id="logo-home">
+        <!-- SVG Shield with alert icon -->
+        <svg class="logo-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="M12 8v4" stroke-linecap="round"/>
+          <path d="M12 16h.01" stroke-linecap="round"/>
+        </svg>
+        <span>RiskGuard</span>
+      </a>
+      <button class="btn-about" id="btn-about" aria-haspopup="dialog" aria-controls="modal-about">
+        서비스 소개
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main>
+    
+    <!-- Screen 1: Landing Screen -->
+    <section id="screen-landing" class="screen">
+      <div class="landing-hero">
+        <span class="hero-tag">AI 투자주의보</span>
+        <h1 class="hero-title">투자하기 전에 <span>피해야 할 위험</span>을 확인하세요.</h1>
+        <p class="hero-subtitle">돈을 버는 기회보다 잃지 않는 투자가 먼저입니다. 복잡한 재무 데이터와 잠재적 위협 요소를 AI가 초보자 눈높이에서 알기 쉽게 진단해 드립니다.</p>
+        <button class="hero-cta" id="btn-hero-cta">위험도 분석하기</button>
+      </div>
+
+      <!-- Search Section -->
+      <div class="search-container" id="search-section">
+        <div class="search-input-wrapper">
+          <svg class="search-icon-inline" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="M21 21l-4.3-4.3"/>
+          </svg>
+          <input type="text" id="input-search" class="search-input" placeholder="주식, 채권, 회사명 입력 (예: 홈플러스, 삼성전자)" aria-label="투자 자산 검색">
+        </div>
+        <button class="btn-search" id="btn-search-submit">분석</button>
+      </div>
+
+      <!-- Quick Search Recommendations -->
+      <div class="quick-tags">
+        <button class="tag-btn" data-value="홈플러스">홈플러스 채권</button>
+        <button class="tag-btn" data-value="삼성전자">삼성전자</button>
+        <button class="tag-btn" data-value="카카오">카카오</button>
+        <button class="tag-btn" data-value="현대자동차">현대자동차</button>
+      </div>
+
+      <!-- Daily Top 10 Section -->
+      <div class="top-risk-section">
+        <h3 class="top-risk-title">
+          <svg class="top-risk-title-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          오늘의 고위험 주의 종목 Top 10
+        </h3>
+        <p class="top-risk-subtitle">매일 업데이트되는 데이터 시뮬레이션을 기초로 선정한 오늘의 고위험 자산 순위입니다. (클릭 시 분석 결과로 이동)</p>
+        <div class="top-risk-list" id="top-risk-list-container">
+          <!-- Dynamically populated by app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen 2: Result Screen (Hidden by default) -->
+    <section id="screen-result" class="screen hidden">
+      <div class="result-header">
+        <button class="btn-back" id="btn-back-home" aria-label="메인 화면으로 가기">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          이전으로
+        </button>
+        <div class="result-title-group">
+          <span class="result-title-label">분석 대상</span>
+          <h2 class="result-title" id="text-asset-name">자산명</h2>
+        </div>
+      </div>
+
+      <!-- Score & Summary Cards -->
+      <div class="grid-result-layout">
+        
+        <!-- Score Circular Gauge Card -->
+        <div class="card-gauge">
+          <div class="gauge-wrapper">
+            <svg class="gauge-svg" viewBox="0 0 180 180">
+              <circle class="gauge-bg" cx="90" cy="90" r="80" />
+              <circle class="gauge-fill" id="gauge-fill-circle" cx="90" cy="90" r="80" />
+            </svg>
+            <div class="gauge-text">
+              <span class="gauge-value" id="text-risk-score">0</span>
+              <span class="gauge-max">/ 100 점</span>
+            </div>
+          </div>
+          <div class="badge-risk" id="badge-risk-level">SAFE</div>
+        </div>
+
+        <!-- AI Summary Card -->
+        <div class="card-ai-explanation">
+          <div class="ai-card-header">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+            <span>AI 위험도 분석 리포트</span>
+            <span class="ai-badge">MVP AI</span>
+          </div>
+          <p class="ai-explanation-text" id="text-ai-summary">
+            여기에 AI 설명이 들어갑니다.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Risk Factors Breakdown -->
+      <div class="breakdown-title-group">
+        <h3 class="breakdown-title">주요 재무 위험 요소 진단</h3>
+      </div>
+      
+      <div class="grid-breakdown" id="grid-breakdown-container">
+        <!-- Will be dynamically updated by app.js -->
+      </div>
+
+      <!-- Warning Bottom Banner -->
+      <div class="warning-banner">
+        <svg class="warning-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13" stroke-linecap="round"/>
+          <line x1="12" y1="17" x2="12.01" y2="17" stroke-linecap="round"/>
+        </svg>
+        <span class="warning-banner-text">
+          본 분석 결과는 예시용 Mock 데이터에 기초한 고위험 투자 자산 경고 목적으로 제공되며, 투자 권유나 추천이 아닙니다. 이 상품은 높은 원금 손실 가능성이 있을 수 있으므로 최종적인 투자 결정 및 책임은 전적으로 투자자 본인에게 있습니다.
+        </span>
+      </div>
+    </section>
+
+    <!-- Screen 3: Asset Not Found Screen (Hidden by default) -->
+    <section id="screen-not-found" class="screen hidden">
+      <div class="not-found-container">
+        <svg class="not-found-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="M21 21l-4.3-4.3M8 11h6"/>
+        </svg>
+        <h3 class="not-found-title">해당 자산 정보를 찾을 수 없습니다</h3>
+        <p class="not-found-desc">
+          검색어는 최소 2글자 이상 입력해 주셔야 합니다. <br>현재 버전은 코스피 상장사 및 주요 채권 자산의 위험도 경고 서비스를 제공하고 있습니다.
+        </p>
+        <button class="btn-search" id="btn-not-found-back">메인 화면으로 돌아가기</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- About Modal (Hidden by default) -->
+  <div id="modal-about" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">RiskGuard 소개</h3>
+        <button class="btn-close-modal" id="btn-close-modal" aria-label="소개 창 닫기">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-highlight-box">
+          “무엇을 살까?”가 아닌 “무엇을 피할까?”를 고민합니다.
+        </p>
+        <p>
+          RiskGuard는 복잡하고 어려운 재무제표의 용어들을 일반 개인 투자자가 한눈에 이해하기 쉬운 직관적인 경고 용어들로 순화하여 제공합니다.
+        </p>
+        <ul class="modal-list">
+          <li><strong>EBITDA/DCF 대신:</strong> '빚 상환 능력', '현금 보유 상태' 등 쉬운 명칭 사용.</li>
+          <li><strong>단순 게이지 제공:</strong> 위험도를 0부터 100까지 직관적으로 정량화.</li>
+          <li><strong>대형 손실 예방:</strong> 부실 자산에 대한 사전 경보 및 주의보 안내.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay (Hidden by default) -->
+  <div id="loading-overlay" class="loading-overlay hidden" aria-live="polite">
+    <div class="spinner"></div>
+    <div class="loading-text">AI 분석 중...</div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
